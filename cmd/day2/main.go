@@ -12,12 +12,20 @@ import (
 var input string
 
 func main() {
-	answer := 0
 	limit := Cube{
 		red:   12,
 		green: 13,
 		blue:  14,
 	}
+	answer := SolvePart1(input, limit)
+	fmt.Printf("part1 answer: %d\n", answer)
+
+	answer = SolvePart2(input)
+	fmt.Printf("part2 answer: %d\n", answer)
+}
+
+func SolvePart1(input string, limit Cube) int {
+	answer := 0
 	lines := strings.Split(input, "\n")
 	for _, line := range lines {
 		game := NewGame(line)
@@ -25,7 +33,28 @@ func main() {
 			answer += game.id
 		}
 	}
-	fmt.Printf("answer: %d\n", answer)
+	return answer
+}
+
+func SolvePart2(input string) int {
+	answer := 0
+	for _, line := range strings.Split(input, "\n") {
+		game := NewGame(line)
+		minCube := Cube{}
+		for _, cube := range game.cubes {
+			if minCube.red == 0 || minCube.red < cube.red {
+				minCube.red = cube.red
+			}
+			if minCube.green == 0 || minCube.green < cube.green {
+				minCube.green = cube.green
+			}
+			if minCube.blue == 0 || minCube.blue < cube.blue {
+				minCube.blue = cube.blue
+			}
+		}
+		answer += minCube.red * minCube.green * minCube.blue
+	}
+	return answer
 }
 
 type Game struct {
