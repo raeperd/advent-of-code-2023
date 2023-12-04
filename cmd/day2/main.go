@@ -42,13 +42,13 @@ func SolvePart2(input string) int {
 		game := NewGame(line)
 		minCube := Cube{}
 		for _, cube := range game.cubes {
-			if minCube.red == 0 || minCube.red < cube.red {
+			if minCube.red < cube.red {
 				minCube.red = cube.red
 			}
-			if minCube.green == 0 || minCube.green < cube.green {
+			if minCube.green < cube.green {
 				minCube.green = cube.green
 			}
-			if minCube.blue == 0 || minCube.blue < cube.blue {
+			if minCube.blue < cube.blue {
 				minCube.blue = cube.blue
 			}
 		}
