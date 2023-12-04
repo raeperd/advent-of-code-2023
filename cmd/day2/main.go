@@ -11,6 +11,23 @@ import (
 //go:embed input.txt
 var input string
 
+func main() {
+	answer := 0
+	limit := Cube{
+		red:   12,
+		green: 13,
+		blue:  14,
+	}
+	lines := strings.Split(input, "\n")
+	for _, line := range lines {
+		game := NewGame(line)
+		if game.IsPossible(limit) {
+			answer += game.id
+		}
+	}
+	fmt.Printf("answer: %d\n", answer)
+}
+
 type Game struct {
 	id    int
 	cubes []Cube
@@ -60,34 +77,17 @@ func NewGame(line string) Game {
 	return game
 }
 
-func main() {
-	answer := 0
-	limit := Cube{
-		red:   12,
-		green: 13,
-		blue:  14,
-	}
-	lines := strings.Split(input, "\n")
-	for _, line := range lines {
-		game := NewGame(line)
-		possible := true
-		for _, cube := range game.cubes {
-			if limit.red < cube.red {
-				possible = false
-				break
-			}
-			if limit.green < cube.green {
-				possible = false
-				break
-			}
-			if limit.blue < cube.blue {
-				possible = false
-				break
-			}
+func (g Game) IsPossible(limit Cube) bool {
+	for _, cube := range g.cubes {
+		if limit.red < cube.red {
+			return false
 		}
-		if possible {
-			answer += game.id
+		if limit.green < cube.green {
+			return false
+		}
+		if limit.blue < cube.blue {
+			return false
 		}
 	}
-	fmt.Printf("answer: %d\n", answer)
+	return true
 }
