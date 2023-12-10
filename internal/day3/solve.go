@@ -6,70 +6,69 @@ import (
 	"strings"
 )
 
-func Solve(input string) (int, error) {
+func Solve(input string) (int64, error) {
 	lines := strings.Split(input, "\n")
 	items := make([][]rune, len(lines))
 	for r, line := range lines {
 		items[r] = []rune(line)
 	}
 
-	windowToNumber := make(map[Window]string)
+	numbers := make([]int, 0)
 	for r, row := range items {
 		number := make([]rune, 0, len(row))
+		keepNumber := false
 		for c, item := range row {
 			if '0' <= item && item <= '9' {
 				number = append(number, item)
+				if keepNumber || hasAdjacentSymbol(items, r, c) {
+					keepNumber = true
+				}
 				continue
 			}
 			if len(number) > 0 {
-				windowToNumber[Window{Position{r - 1, c - len(number) - 1}, Position{r + 1, c}}] = string(number)
+				if keepNumber {
+					num, err := strconv.Atoi(string(number))
+					if err != nil {
+						return 0, err
+					}
+					numbers = append(numbers, num)
+					fmt.Printf("Found number: %d\n", num)
+				}
 				number = make([]rune, 0, len(row))
+				keepNumber = false
 			}
 		}
 	}
 
-	answers := make([]int, 0, len(windowToNumber))
-	for window, number := range windowToNumber {
-		found := false
-		for r := window.from.r; r <= window.to.r; r++ {
-			if found {
-				break
-			}
-			for c := window.from.c; c <= window.to.c; c++ {
-				if found {
-					break
-				}
-				if r < 0 || c < 0 || r >= len(items) || c >= len(items[r]) {
-					continue
-				}
-				if '0' <= items[r][c] && items[r][c] <= '9' {
-					continue
-				}
-				if items[r][c] == '.' {
-					continue
-				}
-				fmt.Printf("found number: %s with symbol: %c in %d,%d\n", number, items[r][c], r, c)
-				num, err := strconv.Atoi(number)
-				if err != nil {
-					return 0, err
-				}
-				answers = append(answers, num)
-				found = true
-			}
-		}
-	}
-
-	answer := 0
-	for _, a := range answers {
-		answer += a
+	var answer int64
+	for _, num := range numbers {
+		answer += int64(num)
 	}
 	return answer, nil
 }
 
-type Window struct {
-	from, to Position
+func hasAdjacentSymbol(schema [][]rune, r, c int) bool {
+	if r < 0 || c < 0 || r >= len(schema) || c >= len(schema[r]) {
+		return false
+	}
+	for _, dr := range []int{-1, 0, 1} {
+		nr := r + dr
+		if nr < 0 || nr >= len(schema) {
+			continue
+		}
+		for _, dc := range []int{-1, 0, 1} {
+			nc := c + dc
+			if nc < 0 || nc >= len(schema[nr]) {
+				continue
+			}
+			if !isNumber(schema[nr][nc]) && schema[nr][nc] != '.' {
+				return true
+			}
+		}
+	}
+	return false
 }
 
-type Position struct {
-	r, c int
+func isNumber(r rune) bool {
+	return '0' <= r && r <= '9'
 }
