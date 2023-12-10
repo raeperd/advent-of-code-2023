@@ -3,14 +3,21 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"log"
 
-	"github.com/raeperd/advent-of-code-2023/internal/day2"
+	"github.com/raeperd/advent-of-code-2023/internal/day3"
 )
 
-//go:embed internal/day2/testdata/input.txt
+//go:embed internal/day3/testdata/input.txt
 var input string
 
+//go:embed internal/day3/testdata/test_input.txt
+var testInput string
+
 func main() {
-	answer := day2.SolvePart2(input)
+	answer, err := day3.Solve(input)
+	if err != nil {
+		log.Fatalf("Solve() = %v", err)
+	}
 	fmt.Printf("Answer: %v\n", answer)
 }
