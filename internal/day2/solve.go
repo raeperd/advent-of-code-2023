@@ -1,28 +1,11 @@
-package main
+package day2
 
 import (
 	_ "embed"
-	"fmt"
 	"log"
 	"strconv"
 	"strings"
 )
-
-//go:embed input.txt
-var input string
-
-func main() {
-	limit := Cube{
-		red:   12,
-		green: 13,
-		blue:  14,
-	}
-	answer := SolvePart1(input, limit)
-	fmt.Printf("part1 answer: %d\n", answer)
-
-	answer = SolvePart2(input)
-	fmt.Printf("part2 answer: %d\n", answer)
-}
 
 func SolvePart1(input string, limit Cube) int {
 	answer := 0

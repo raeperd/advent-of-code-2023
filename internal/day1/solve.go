@@ -1,15 +1,11 @@
-package main
+package day1
 
 import (
 	_ "embed"
-	"fmt"
 	"strings"
 )
 
-//go:embed input.txt
-var input string
-
-func main() {
+func Solve(input string) (int, error) {
 	answer := 0
 	lines := strings.Split(input, "\n")
 	for _, line := range lines {
@@ -20,8 +16,7 @@ func main() {
 			}
 		}
 		number := numbers[0]*10 + numbers[len(numbers)-1]
-		fmt.Printf("number: %d\n", number)
 		answer += number
 	}
-	fmt.Printf("answer: %d\n", answer)
+	return answer, nil
 }
