@@ -47,6 +47,13 @@ func Solve(input string) (int, error) {
 				digits = make([]rune, 0)
 			}
 		}
+		if len(digits) > 0 && isPartNumber {
+			partNumber, err := strconv.Atoi(string(digits))
+			if err != nil {
+				return 0, err
+			}
+			partNumbers = append(partNumbers, partNumber)
+		}
 	}
 
 	// not necessary, but for better debugging
